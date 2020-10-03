@@ -11,6 +11,8 @@ namespace GravitySpheres.Scripts
 
         [SerializeField] private GravitySpheresSettings settings;
         [SerializeField] private Transform              spheresPoolTransform;
+        [Space]
+        [SerializeField] private GravitySpherePositionRandomizer positionRandomizer;
 
         private GravitySphere[] spheresPool;
         private int             nextSphereIndex = 0;
@@ -23,22 +25,28 @@ namespace GravitySpheres.Scripts
 
         private void Awake()
         {
-            if (ValidateReferences())
-                CreateSpheresPool();
+            if (ValidateReferences() == false)
+                return;
+
+            Initialize();
         }
 
         private bool ValidateReferences()
         {
-            bool areSettingsSet      = settings;
-            bool arePoolTransformSet = spheresPoolTransform;
-            if (areSettingsSet && arePoolTransformSet)
+            bool areSettingsSet          = settings;
+            bool isPoolTransformSet      = spheresPoolTransform;
+            bool isPositionRandomizerSet = positionRandomizer;
+            if (areSettingsSet && isPoolTransformSet && isPositionRandomizerSet)
                 return true;
 
             if (areSettingsSet == false)
                 Debug.LogError("Settings unavailable!");
 
-            if (arePoolTransformSet == false)
+            if (isPoolTransformSet == false)
                 Debug.LogError("SpheresPoolTransform unavailable!");
+
+            if (positionRandomizer == false)
+                Debug.LogError("PositionRandomizer unavailable!");
 
             Debug.LogError("Aborting...");
             AppUtility.Quit();
@@ -46,20 +54,18 @@ namespace GravitySpheres.Scripts
             return false;
         }
 
+        private void Initialize()
+        {
+            positionRandomizer.Initialize();
+            CreateSpheresPool();
+        }
+
         private void CreateSpheresPool()
         {
             spheresPool = new GravitySphere[settings.SpheresLimit];
 
             for (int i = 0; i < spheresPool.Length; i++)
-                spheresPool[i] = CreateSphere();
-        }
-
-        private GravitySphere CreateSphere()
-        {
-            var sphere = Instantiate(settings.SpherePrefab, spheresPoolTransform);
-            sphere.gameObject.SetActive(false);
-
-            return sphere;
+                spheresPool[i] = settings.SpherePrefab.Create(spheresPoolTransform, positionRandomizer.GetRandomPosition());
         }
 
         #endregion constructor & inits
