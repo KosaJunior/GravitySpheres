@@ -12,7 +12,7 @@ namespace GravitySpheres.Scripts
         [SerializeField] private GravitySpheresSettings settings;
         [SerializeField] private Transform              spheresPoolTransform;
         [Space]
-        [SerializeField] private GravitySpherePositionRandomizer positionRandomizer;
+        [SerializeField] private Camera mainCamera;
 
         private GravitySphere[] spheresPool;
         private int             nextSphereIndex = 0;
@@ -28,25 +28,25 @@ namespace GravitySpheres.Scripts
             if (ValidateReferences() == false)
                 return;
 
-            Initialize();
+            CreateSpheresPool();
         }
 
         private bool ValidateReferences()
         {
-            bool areSettingsSet          = settings;
-            bool isPoolTransformSet      = spheresPoolTransform;
-            bool isPositionRandomizerSet = positionRandomizer;
-            if (areSettingsSet && isPoolTransformSet && isPositionRandomizerSet)
+            bool areSettingsSet     = settings;
+            bool isPoolTransformSet = spheresPoolTransform;
+            bool isCameraSet        = mainCamera;
+            if (areSettingsSet && isPoolTransformSet && isCameraSet)
                 return true;
 
             if (areSettingsSet == false)
-                Debug.LogError("Settings unavailable!");
+                Debug.LogError("Settings are not set!");
 
             if (isPoolTransformSet == false)
-                Debug.LogError("SpheresPoolTransform unavailable!");
+                Debug.LogError("SpheresPoolTransform is not set!");
 
-            if (positionRandomizer == false)
-                Debug.LogError("PositionRandomizer unavailable!");
+            if (isCameraSet == false)
+                Debug.LogError("MainCamera are not set!");
 
             Debug.LogError("Aborting...");
             AppUtility.Quit();
@@ -54,18 +54,14 @@ namespace GravitySpheres.Scripts
             return false;
         }
 
-        private void Initialize()
-        {
-            positionRandomizer.Initialize();
-            CreateSpheresPool();
-        }
-
         private void CreateSpheresPool()
         {
             spheresPool = new GravitySphere[settings.SpheresLimit];
+            float sphereXMovementLimit = mainCamera.orthographicSize;
+            float sphereYMovementLimit = sphereXMovementLimit * mainCamera.aspect;
 
             for (int i = 0; i < spheresPool.Length; i++)
-                spheresPool[i] = settings.SpherePrefab.Create(spheresPoolTransform, positionRandomizer.GetRandomPosition());
+                spheresPool[i] = settings.SphereBuilder.Create(spheresPoolTransform, sphereXMovementLimit, sphereYMovementLimit);
         }
 
         #endregion constructor & inits
