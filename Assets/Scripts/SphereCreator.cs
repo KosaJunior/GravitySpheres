@@ -7,6 +7,8 @@ namespace GravitySpheres.Scripts
     {
         #region Variables
 
+        public event System.Action<int> OnVisibleSpheresCountChange;
+
         [SerializeField] private GravitySpheresSettings settings;
         [SerializeField] private Transform              spheresPoolTransform;
 
@@ -86,7 +88,8 @@ namespace GravitySpheres.Scripts
 
         private void ShowSphere()
         {
-            spheresPool[nextSphereIndex++].gameObject.SetActive(true);
+            spheresPool[nextSphereIndex].gameObject.SetActive(true);
+            OnVisibleSpheresCountChange?.Invoke(nextSphereIndex++);
 
             if (AreAllSpheresVisible())
                 DisableDisplaying();
