@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   createDelay: 0.25
   spheresLimit: 250
-  spherePrefab: {fileID: 4850979069296087386, guid: 2a0fabf2d414f8e4fb448b71e2ecfe38,
+  spherePrefab: {fileID: 3125961120812741073, guid: 2a0fabf2d414f8e4fb448b71e2ecfe38,
     type: 3}
