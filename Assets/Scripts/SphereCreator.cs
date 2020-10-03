@@ -57,8 +57,8 @@ namespace GravitySpheres.Scripts
         private void CreateSpheresPool()
         {
             spheresPool = new GravitySphere[settings.SpheresLimit];
-            float sphereXMovementLimit = mainCamera.orthographicSize;
-            float sphereYMovementLimit = sphereXMovementLimit * mainCamera.aspect;
+            float sphereYMovementLimit = mainCamera.orthographicSize;
+            float sphereXMovementLimit = sphereYMovementLimit * mainCamera.aspect;
 
             for (int i = 0; i < spheresPool.Length; i++)
                 spheresPool[i] = settings.SphereBuilder.Create(spheresPoolTransform, sphereXMovementLimit, sphereYMovementLimit);
