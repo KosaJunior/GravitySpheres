@@ -91,7 +91,7 @@ namespace GravitySpheres.Scripts
         private void ShowSphere()
         {
             spheresPool[nextSphereIndex].gameObject.SetActive(true);
-            OnVisibleSpheresCountChange?.Invoke(nextSphereIndex++);
+            OnVisibleSpheresCountChange?.Invoke(++nextSphereIndex);
 
             if (AreAllSpheresVisible())
                 DisableDisplaying();
