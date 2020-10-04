@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: GravitySpheresSettings
   m_EditorClassIdentifier: 
   createDelay: 0.25
-  spheresLimit: 2
+  spheresLimit: 100
+  spheresToBreakup: 10

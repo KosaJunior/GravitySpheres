@@ -4,27 +4,39 @@ namespace GravitySpheres.Scripts
 {
     public class GravitySphereBuilder : MonoBehaviour
     {
-        [SerializeField] private GravitySphere spherePrefab;
+        [SerializeField] private GravitySphere          spherePrefab;
+        [SerializeField] private GravitySpheresSettings settings;
 
         public GravitySphere Create(int i, Transform parent, Vector3 position)
         {
-            ValidateSpherePrefabReference();
+            if (ValidateSpherePrefabReference() == false)
+                return null;
+
             DisablePrefabGameObject();
 
             var sphere = Instantiate(spherePrefab, parent);
             sphere.name                               = $"GravitySphere({i})";
             sphere.gameObject.transform.localPosition = position;
             sphere.gameObject.SetActive(false);
-            sphere.Initialize();
+            sphere.Initialize(settings.SpheresToBreakup);
 
             return sphere;
         }
 
-        private void ValidateSpherePrefabReference()
+        private bool ValidateSpherePrefabReference()
         {
-            if (spherePrefab) return;
+            bool isPrefabSet    = spherePrefab;
+            bool areSettingsSet = settings;
+            if (isPrefabSet && areSettingsSet)
+                return true;
 
-            Debug.LogError($"[{nameof(GravitySphereBuilder)}]: sphere prefab not set!");
+            if (isPrefabSet == false)
+                Debug.LogError($"[{nameof(GravitySphereBuilder)}]: Sphere prefab not set!");
+
+            if (areSettingsSet == false)
+                Debug.LogError($"[{nameof(GravitySphereBuilder)}]: Settings are not set!");
+
+            return false;
         }
 
         private void DisablePrefabGameObject()

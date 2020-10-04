@@ -43,6 +43,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9532251e64046bd89a9a601d0b4fdf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movingSpeed: 2
   spherePrefab: {fileID: 3125961120812741073, guid: 2a0fabf2d414f8e4fb448b71e2ecfe38,
     type: 3}
+  settings: {fileID: 11400000, guid: 7131d790fc3b76b46ad4fb73ee605fc2, type: 2}

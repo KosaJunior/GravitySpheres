@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace GravitySpheres.Scripts
@@ -11,6 +11,13 @@ namespace GravitySpheres.Scripts
         [SerializeField] private Rigidbody rigidbody;
         [SerializeField] private SphereGravityField gravityField;
 
+        [SerializeField] private List<GravitySphere> spheresInside = new List<GravitySphere>();
+
+        private uint spheresInsideLimit;
+
+        private float   defaultMass;
+        private Vector3 defaultPosition;
+
         #endregion variables
 
         #region Properties
@@ -21,24 +28,52 @@ namespace GravitySpheres.Scripts
 
         #region Constructor & inits
 
-        private void OnEnable()
+        public void Initialize(uint spheresInsideLimit)
         {
-            gravityField.RegisterSphere(this);
+            this.spheresInsideLimit = spheresInsideLimit;
+            CacheStartParameters();
         }
 
-        private void OnDisable()
+        private void CacheStartParameters()
         {
-            gravityField.UnregisterSphere(this);
+            defaultMass     = rigidbody.mass;
+            defaultPosition = transform.position;
         }
-
-        public void Initialize() { }
 
         #endregion constructor & inits
 
         #region Public methods
 
-        public void ShowSphere() => gameObject.SetActive(true);
+        public void ShowSphere()
+        {
+            gravityField.RegisterSphere(this);
+            gameObject.SetActive(true);
+        }
+
+        public void DisableSphere()
+        {
+            gravityField.UnregisterSphere(this);
+            gameObject.SetActive(false);
+            ResetSphere();
+        }
+
+        public void AddSphereInside(GravitySphere sphereInside)
+        {
+            if (spheresInside.Contains(sphereInside)) return;
+
+            spheresInside.Add(sphereInside);
+        }
 
         #endregion public methods
+
+        #region Private methods
+
+        private void ResetSphere()
+        {
+            rigidbody.mass     = defaultMass;
+            transform.position = defaultPosition;
+        }
+
+        #endregion private methods
     }
 }

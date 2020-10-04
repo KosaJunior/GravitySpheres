@@ -5,8 +5,6 @@ namespace GravitySpheres.Scripts
 {
     public class SphereCombineController : MonoBehaviour
     {
-        [SerializeField] private GravitySphereBuilder builder;
-
         [Header("[ Settings ]")]
         [SerializeField] private float combineDelay = 0.5f; // Wait for all possible collision
         [SerializeField] private float combineTime = 4f;
@@ -58,8 +56,6 @@ namespace GravitySpheres.Scripts
 
         private void Combine()
         {
-            if (combineData.Count == 0) return;
-
             foreach (var combine in combineData.Values)
                 combine.CombineSpheres();
 

@@ -68,6 +68,8 @@ namespace GravitySpheres.Scripts
             for (int i = 0; i < spheresPool.Length; i++)
             {
                 var gravitySphere = builder.Create(i, transform, GetRandomPositionInsideArea());
+                if (gravitySphere == false) return;
+
                 sphereCombineController.SubscribeToCollisionEvent(gravitySphere);
                 spheresPool[i] = gravitySphere;
             }
@@ -79,7 +81,7 @@ namespace GravitySpheres.Scripts
                 new Vector3(
                     Random.Range(0, Screen.width),
                     Random.Range(0, Screen.height),
-                    camera.farClipPlane / 2
+                    Random.Range(camera.nearClipPlane, camera.farClipPlane)
                 ));
         }
 
@@ -109,12 +111,16 @@ namespace GravitySpheres.Scripts
 
         private void ShowSphere()
         {
+            if (IsAnySphereCreated() == false) return;
+
             spheresPool[nextSphereIndex].ShowSphere();
             OnVisibleSpheresCountChange?.Invoke(++nextSphereIndex);
 
             if (AreAllSpheresVisible())
                 DisableDisplaying();
         }
+
+        private bool IsAnySphereCreated() => spheresPool[0];
 
         private bool AreAllSpheresVisible() => nextSphereIndex == spheresPool.Length;
 

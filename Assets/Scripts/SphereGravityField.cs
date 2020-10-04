@@ -20,6 +20,26 @@ namespace GravitySpheres.Scripts
 
         #endregion variables
 
+        #region Public methods
+
+        public void EnableGravity()
+        {
+            rigidbody.detectCollisions = true;
+            enabled                    = true;
+        }
+
+        public void RegisterSphere(GravitySphere sphere)
+        {
+            spheres.Add(sphere);
+        }
+
+        public void UnregisterSphere(GravitySphere sphere)
+        {
+            spheres.Remove(sphere);
+        }
+
+        #endregion public methods
+
         #region Private methods
 
         private void OnCollisionEnter(Collision other)
@@ -40,16 +60,6 @@ namespace GravitySpheres.Scripts
         private bool IsCollideWithGravityField(LayerMask otherMask)
         {
             return sphereGravityFieldMask.Contains(otherMask);
-        }
-
-        public void RegisterSphere(GravitySphere sphere)
-        {
-            spheres.Add(sphere);
-        }
-
-        public void UnregisterSphere(GravitySphere sphere)
-        {
-            spheres.Remove(sphere);
         }
 
         private void FixedUpdate()
