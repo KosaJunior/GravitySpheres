@@ -113,7 +113,10 @@ namespace GravitySpheres.Scripts
         {
             if (IsAnySphereCreated() == false) return;
 
-            spheresPool[nextSphereIndex].ShowSphere();
+            var sphere = spheresPool[nextSphereIndex];
+            sphere.ShowSphere();
+            sphere.GravityField.RegisterSphere(sphere);
+
             OnVisibleSpheresCountChange?.Invoke(++nextSphereIndex);
 
             if (AreAllSpheresVisible())

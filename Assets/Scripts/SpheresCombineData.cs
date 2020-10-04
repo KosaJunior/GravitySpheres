@@ -62,14 +62,30 @@ namespace GravitySpheres.Scripts
         /// </summary>
         private void ResetAllSpheresWithoutFirst()
         {
-            for (int i = 1; i < spheresToCombine.Count; i++)
+            var largestSphere = GetLargestGravitySphere();
+
+            for (int i = 0; i < spheresToCombine.Count; i++)
             {
+                if (largestSphere.GetHashCode() == spheresToCombine[i].GetHashCode()) continue;
+
                 spheresToCombine[i].DisableSphere();
-                spheresToCombine[0].AddSphereInside(spheresToCombine[i]);
+                largestSphere.AddSphereInside(spheresToCombine[i]);
             }
 
-            spheresToCombine[0].Rigidbody.mass = combinedMass;
-            spheresToCombine[0].GravityField.EnableGravity();
+            largestSphere.Rigidbody.mass = combinedMass;
+            largestSphere.GravityField.EnableGravity();
+        }
+
+        private GravitySphere GetLargestGravitySphere()
+        {
+            var largestSphere = spheresToCombine[0];
+            for (int i = 1; i < spheresToCombine.Count; i++)
+            {
+                if (largestSphere.Rigidbody.mass < spheresToCombine[i].Rigidbody.mass)
+                    largestSphere = spheresToCombine[i];
+            }
+
+            return largestSphere;
         }
 
         private void ChangeScale(Transform transformToScale)
