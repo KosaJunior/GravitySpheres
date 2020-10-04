@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f2cedd6ed8047faad9354ba21ba98e9, type: 3}
   m_Name: GravitySphereSettings
   m_EditorClassIdentifier: 
-  spheresToBreakup: 50
+  massModifierToBreakup: 50
+  maxSpeedAfterBreakup: 2000
+  minSpeedAfterBreakup: 1200
   timeWithCollisionDisabledAfterBreakup: 0.5

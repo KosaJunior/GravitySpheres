@@ -98,7 +98,6 @@ MonoBehaviour:
   settings: {fileID: 11400000, guid: a967593c09b4a6346bb37b9221ba67d4, type: 2}
   rigidbody: {fileID: 4266324239127480401}
   gravityField: {fileID: 1670919228565830375}
-  spheresInside: []
 --- !u!114 &1670919228565830375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -137,7 +136,7 @@ Rigidbody:
   m_GameObject: {fileID: 4850979069296087386}
   serializedVersion: 2
   m_Mass: 1000
-  m_Drag: 10
+  m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 0
   m_IsKinematic: 0

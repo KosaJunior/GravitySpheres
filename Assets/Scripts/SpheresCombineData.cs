@@ -13,6 +13,8 @@ namespace GravitySpheres.Scripts
 
         private float combinedMass = 0;
 
+        private GravitySphere largestSphere;
+
         public SpheresCombineData(GravitySphere sphere, float combineTime)
         {
             spheresToCombine = new List<GravitySphere>();
@@ -39,22 +41,27 @@ namespace GravitySpheres.Scripts
         public void AddSphereToCombine(GravitySphere gravitySphere)
         {
             spheresToCombine.Add(gravitySphere);
+            largestSphere = GetLargestGravitySphere();
             UpdateProperties();
         }
 
         public void CombineSpheres()
         {
             for (int i = 0; i < spheresToCombine.Count; i++)
-            {
                 Move(spheresToCombine[i].Rigidbody);
-                ChangeScale(spheresToCombine[i].transform);
-            }
+
+            ChangeScale(largestSphere.transform);
         }
 
         private void Move(Rigidbody rigidbodyToMove)
         {
-            rigidbodyToMove.DOMove(targetPosition, combineTime)
-                           .OnComplete(ResetAllSpheresWithoutFirst);
+            rigidbodyToMove.DOMove(targetPosition, combineTime);
+        }
+
+        private void ChangeScale(Transform transformToScale)
+        {
+            transformToScale.DOScale(targetScale, combineTime)
+                            .OnComplete(ResetAllSpheresWithoutFirst);
         }
 
         /// <summary>
@@ -62,8 +69,6 @@ namespace GravitySpheres.Scripts
         /// </summary>
         private void ResetAllSpheresWithoutFirst()
         {
-            var largestSphere = GetLargestGravitySphere();
-
             for (int i = 0; i < spheresToCombine.Count; i++)
             {
                 if (largestSphere.GetHashCode() == spheresToCombine[i].GetHashCode()) continue;
@@ -73,24 +78,20 @@ namespace GravitySpheres.Scripts
             }
 
             largestSphere.Rigidbody.mass = combinedMass;
+            largestSphere.CheckIsTimeToDivide();
             largestSphere.GravityField.EnableGravity();
         }
 
         private GravitySphere GetLargestGravitySphere()
         {
-            var largestSphere = spheresToCombine[0];
+            var sphere = spheresToCombine[0];
             for (int i = 1; i < spheresToCombine.Count; i++)
             {
-                if (largestSphere.Rigidbody.mass < spheresToCombine[i].Rigidbody.mass)
-                    largestSphere = spheresToCombine[i];
+                if (sphere.Rigidbody.mass < spheresToCombine[i].Rigidbody.mass)
+                    sphere = spheresToCombine[i];
             }
 
-            return largestSphere;
-        }
-
-        private void ChangeScale(Transform transformToScale)
-        {
-            transformToScale.DOScale(targetScale, combineTime);
+            return sphere;
         }
     }
 }

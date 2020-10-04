@@ -10,7 +10,8 @@ namespace GravitySpheres.Scripts
 
         [Header("[ References ]")]
         [SerializeField] private GravitySphereSettings settings;
-        [SerializeField] private Rigidbody rigidbody;
+
+        [SerializeField] private Rigidbody          rigidbody;
         [SerializeField] private SphereGravityField gravityField;
 
         private List<GravitySphere> spheresInside = new List<GravitySphere>();
@@ -21,7 +22,8 @@ namespace GravitySpheres.Scripts
         #endregion variables
 
         #region Properties
-        public Rigidbody Rigidbody => rigidbody;
+
+        public Rigidbody          Rigidbody    => rigidbody;
         public SphereGravityField GravityField => gravityField;
 
         #endregion properties
@@ -36,18 +38,14 @@ namespace GravitySpheres.Scripts
         private void CacheStartParameters()
         {
             defaultMass  = rigidbody.mass;
-            defaultScale = transform.localScale;
+            defaultScale = transform.lossyScale;
         }
 
         #endregion constructor & inits
 
         #region Public methods
 
-        public void ShowSphere()
-        {
-            gravityField.RegisterSphere(this);
-            gameObject.SetActive(true);
-        }
+        public void ShowSphere() => gameObject.SetActive(true);
 
         public void DisableSphere()
         {
@@ -58,31 +56,45 @@ namespace GravitySpheres.Scripts
 
         public void AddSphereInside(GravitySphere sphereInside)
         {
-            if (spheresInside.Contains(sphereInside)) return;
-
-            spheresInside.Add(sphereInside);
-            CheckIsTimeToBreakUp();
+          if (spheresInside.Contains(sphereInside) == false)
+              spheresInside.Add(sphereInside);
         }
 
-        private void CheckIsTimeToBreakUp()
+        public void CheckIsTimeToDivide()
         {
-            bool isLimitReached = spheresInside.Count >= settings.SpheresToBreakup;
-            if (isLimitReached == false) return;
+            if (IsTimeToDivide() == false) return;
 
             ReleaseSpheres();
+            ResetSphere();
         }
+
+        private bool IsTimeToDivide() => rigidbody.mass >= settings.MassModifierToBreakup * defaultMass;
 
         private void ReleaseSpheres()
         {
             for (int i = 0; i < spheresInside.Count; i++)
-                StartCoroutine(spheresInside[i].ReleaseSphere());
+                spheresInside[i].ReleaseSphere();
+
+            spheresInside.Clear();
         }
 
-        private IEnumerator ReleaseSphere()
+        private void ReleaseSphere()
         {
+            ShowSphere();
+            StartCoroutine(ReleaseSphereCoroutine());
+        }
 
-
+        private IEnumerator ReleaseSphereCoroutine()
+        {
+            FireSphereToRandomDirection();
             yield return new WaitForSeconds(settings.TimeWithCollisionDisabledAfterBreakup);
+            gravityField.EnableGravity();
+            gravityField.RegisterSphere(this);
+        }
+
+        private void FireSphereToRandomDirection()
+        {
+            rigidbody.AddForce(Random.onUnitSphere * settings.RandomSpeedAfterBreakup, ForceMode.VelocityChange);
         }
 
         #endregion public methods
@@ -91,8 +103,8 @@ namespace GravitySpheres.Scripts
 
         private void ResetSphere()
         {
-            rigidbody.mass     = defaultMass;
-            transform.position = defaultScale;
+            rigidbody.mass       = defaultMass;
+            transform.localScale = defaultScale;
         }
 
         #endregion private methods
