@@ -7,29 +7,49 @@ namespace GravitySpheres.Scripts
     [RequireComponent(typeof(SphereCollider))]
     public class SphereGravityField : MonoBehaviour
     {
+        #region Variables
+
         private const float G = 667.4f;
 
         private static List<GravitySphere> spheres = new List<GravitySphere>();
 
-        public event System.Action<GravitySphere> OnOtherSphereInField;
+        public event System.Action<Collision> OnSphereCollision;
 
-        [SerializeField] private LayerMask gravityFieldMask;
+        [SerializeField] private LayerMask sphereGravityFieldMask;
         [SerializeField] private Rigidbody rigidbody;
 
-        // private void OnTriggerEnter(Collider other)
-        // {
-        //     if (IsCollideWithGravityField(other.gameObject.layer))
-        //         OnOtherSphereInField.Invoke(other.GetComponent<GravitySphere>());
-        // }
+        #endregion variables
+
+        #region Private methods
+
+        private void OnCollisionEnter(Collision other)
+        {
+            if (IsCollideWithGravityField(other.gameObject.layer))
+                OnCollision(other);
+        }
+
+        private void OnCollision(Collision collision)
+        {
+            rigidbody.detectCollisions = false;
+            DisableGravity();
+            OnSphereCollision.Invoke(collision);
+        }
+
+        private void DisableGravity() => enabled = false;
 
         private bool IsCollideWithGravityField(LayerMask otherMask)
         {
-            return gravityFieldMask.Contains(otherMask);
+            return sphereGravityFieldMask.Contains(otherMask);
         }
 
         public void RegisterSphere(GravitySphere sphere)
         {
             spheres.Add(sphere);
+        }
+
+        public void UnregisterSphere(GravitySphere sphere)
+        {
+            spheres.Remove(sphere);
         }
 
         private void FixedUpdate()
@@ -59,5 +79,7 @@ namespace GravitySpheres.Scripts
 
             rigidbodyToAttract.AddForce(force);
         }
+
+        #endregion private methods
     }
 }

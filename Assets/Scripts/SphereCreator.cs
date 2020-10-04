@@ -1,5 +1,6 @@
 ﻿using GravitySpheres.Scripts.Utilities;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace GravitySpheres.Scripts
 {
@@ -9,7 +10,10 @@ namespace GravitySpheres.Scripts
 
         public event System.Action<int> OnVisibleSpheresCountChange;
 
-        [SerializeField] private GravitySpheresSettings settings;
+        [SerializeField] private GravitySphereBuilder builder;
+        [Space]
+        [SerializeField] private GravitySpheresSettings  settings;
+        [SerializeField] private SphereCombineController sphereCombineController;
         [Space]
         [SerializeField] private Camera camera;
 
@@ -32,13 +36,21 @@ namespace GravitySpheres.Scripts
 
         private bool ValidateReferences()
         {
-            bool areSettingsSet = settings;
-            bool isCameraSet    = camera;
-            if (areSettingsSet && isCameraSet)
+            bool areBuilderSet                = builder;
+            bool areSettingsSet               = settings;
+            bool isSphereCombineControllerSet = sphereCombineController != null;
+            bool isCameraSet                  = camera;
+            if (builder && areSettingsSet && isSphereCombineControllerSet && isCameraSet)
                 return true;
+
+            if (areBuilderSet == false)
+                Debug.LogError("Builder are not set!");
 
             if (areSettingsSet == false)
                 Debug.LogError("Settings are not set!");
+
+            if (isSphereCombineControllerSet == false)
+                Debug.LogError("SphereCombineController are not set!");
 
             if (isCameraSet == false)
                 Debug.LogError("Camera are not set!");
@@ -54,7 +66,11 @@ namespace GravitySpheres.Scripts
             spheresPool = new GravitySphere[settings.SpheresLimit];
 
             for (int i = 0; i < spheresPool.Length; i++)
-                spheresPool[i] = settings.SphereBuilder.Create(i, transform, GetRandomPositionInsideArea());
+            {
+                var gravitySphere = builder.Create(i, transform, GetRandomPositionInsideArea());
+                sphereCombineController.SubscribeToCollisionEvent(gravitySphere);
+                spheresPool[i] = gravitySphere;
+            }
         }
 
         private Vector3 GetRandomPositionInsideArea()

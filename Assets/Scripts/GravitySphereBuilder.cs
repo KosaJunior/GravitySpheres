@@ -15,6 +15,7 @@ namespace GravitySpheres.Scripts
             sphere.name                               = $"GravitySphere({i})";
             sphere.gameObject.transform.localPosition = position;
             sphere.gameObject.SetActive(false);
+            sphere.Initialize();
 
             return sphere;
         }

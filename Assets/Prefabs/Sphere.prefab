@@ -1,66 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &425286229753934449
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8259173634977633812}
-  - component: {fileID: 2143954752797332327}
-  - component: {fileID: 28756080695759006}
-  m_Layer: 9
-  m_Name: GravityField
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8259173634977633812
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 425286229753934449}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 6962145554576077477}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2143954752797332327
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 425286229753934449}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d29f3795af941a890bae0de97d6492f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gravityFieldMask:
-    serializedVersion: 2
-    m_Bits: 256
-  rigidbody: {fileID: 4266324239127480401}
---- !u!135 &28756080695759006
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 425286229753934449}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Radius: 2
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4850979069296087386
 GameObject:
   m_ObjectHideFlags: 0
@@ -73,6 +12,7 @@ GameObject:
   - component: {fileID: 9010595367242955525}
   - component: {fileID: 1968642449562258293}
   - component: {fileID: 3125961120812741073}
+  - component: {fileID: 1670919228565830375}
   - component: {fileID: 4250763490077112662}
   - component: {fileID: 4266324239127480401}
   m_Layer: 8
@@ -92,8 +32,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 20, y: 20, z: 20}
-  m_Children:
-  - {fileID: 8259173634977633812}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -157,7 +96,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 4266324239127480401}
-  gravityField: {fileID: 2143954752797332327}
+  gravityField: {fileID: 1670919228565830375}
+--- !u!114 &1670919228565830375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4850979069296087386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d29f3795af941a890bae0de97d6492f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sphereGravityFieldMask:
+    serializedVersion: 2
+    m_Bits: 256
+  rigidbody: {fileID: 4266324239127480401}
 --- !u!135 &4250763490077112662
 SphereCollider:
   m_ObjectHideFlags: 0

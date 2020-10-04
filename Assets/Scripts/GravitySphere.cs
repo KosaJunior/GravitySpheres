@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace GravitySpheres.Scripts
@@ -18,13 +19,25 @@ namespace GravitySpheres.Scripts
 
         #endregion properties
 
-        #region Public methods
+        #region Constructor & inits
 
-        public void ShowSphere()
+        private void OnEnable()
         {
             gravityField.RegisterSphere(this);
-            gameObject.SetActive(true);
         }
+
+        private void OnDisable()
+        {
+            gravityField.UnregisterSphere(this);
+        }
+
+        public void Initialize() { }
+
+        #endregion constructor & inits
+
+        #region Public methods
+
+        public void ShowSphere() => gameObject.SetActive(true);
 
         #endregion public methods
     }

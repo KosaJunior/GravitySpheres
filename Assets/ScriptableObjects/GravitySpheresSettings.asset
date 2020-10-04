@@ -13,6 +13,4 @@ MonoBehaviour:
   m_Name: GravitySpheresSettings
   m_EditorClassIdentifier: 
   createDelay: 0.25
-  spheresLimit: 250
-  sphereBuilder: {fileID: 6294124358157740421, guid: 8ad43ad32fd6011438b009a00921c4c4,
-    type: 3}
+  spheresLimit: 2

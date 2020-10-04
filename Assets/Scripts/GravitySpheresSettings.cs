@@ -8,11 +8,7 @@ namespace GravitySpheres.Scripts
         [SerializeField] private float createDelay  = 0.25f;
         [SerializeField] private uint  spheresLimit = 250;
 
-        [SerializeField] private GravitySphereBuilder sphereBuilder;
-
         public float CreateDelay  => createDelay;
         public uint  SpheresLimit => spheresLimit;
-
-        public GravitySphereBuilder SphereBuilder => sphereBuilder;
     }
 }
