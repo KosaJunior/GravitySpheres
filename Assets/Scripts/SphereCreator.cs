@@ -10,7 +10,6 @@ namespace GravitySpheres.Scripts
         public event System.Action<int> OnVisibleSpheresCountChange;
 
         [SerializeField] private GravitySpheresSettings settings;
-        [SerializeField] private Transform              spheresPoolTransform;
         [Space]
         [SerializeField] private Camera mainCamera;
 
@@ -33,17 +32,13 @@ namespace GravitySpheres.Scripts
 
         private bool ValidateReferences()
         {
-            bool areSettingsSet     = settings;
-            bool isPoolTransformSet = spheresPoolTransform;
-            bool isCameraSet        = mainCamera;
-            if (areSettingsSet && isPoolTransformSet && isCameraSet)
+            bool areSettingsSet = settings;
+            bool isCameraSet    = mainCamera;
+            if (areSettingsSet && isCameraSet)
                 return true;
 
             if (areSettingsSet == false)
                 Debug.LogError("Settings are not set!");
-
-            if (isPoolTransformSet == false)
-                Debug.LogError("SpheresPoolTransform is not set!");
 
             if (isCameraSet == false)
                 Debug.LogError("MainCamera are not set!");
@@ -61,7 +56,7 @@ namespace GravitySpheres.Scripts
             float sphereXMovementLimit = sphereYMovementLimit * mainCamera.aspect;
 
             for (int i = 0; i < spheresPool.Length; i++)
-                spheresPool[i] = settings.SphereBuilder.Create(spheresPoolTransform, sphereXMovementLimit, sphereYMovementLimit);
+                spheresPool[i] = settings.SphereBuilder.Create(transform, sphereXMovementLimit, sphereYMovementLimit);
         }
 
         #endregion constructor & inits
