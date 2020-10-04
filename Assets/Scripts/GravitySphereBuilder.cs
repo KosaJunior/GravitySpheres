@@ -6,13 +6,13 @@ namespace GravitySpheres.Scripts
     {
         [SerializeField] private GravitySphere spherePrefab;
 
-        public GravitySphere Create(Transform parent, float xPositionLimit, float yPositionLimit)
+        public GravitySphere Create(Transform parent, Vector3 position)
         {
             ValidateSpherePrefabReference();
 
             var sphere = Instantiate(spherePrefab, parent);
+            sphere.gameObject.transform.localPosition = position;
             sphere.gameObject.SetActive(false);
-            sphere.Initialize(xPositionLimit, yPositionLimit);
 
             return sphere;
         }

@@ -11,7 +11,7 @@ namespace GravitySpheres.Scripts
 
         [SerializeField] private GravitySpheresSettings settings;
         [Space]
-        [SerializeField] private Camera mainCamera;
+        [SerializeField] private BoxCollider spawnArea;
 
         private GravitySphere[] spheresPool;
         private int             nextSphereIndex = 0;
@@ -33,15 +33,15 @@ namespace GravitySpheres.Scripts
         private bool ValidateReferences()
         {
             bool areSettingsSet = settings;
-            bool isCameraSet    = mainCamera;
-            if (areSettingsSet && isCameraSet)
+            bool isAreaSet      = spawnArea;
+            if (areSettingsSet && isAreaSet)
                 return true;
 
             if (areSettingsSet == false)
                 Debug.LogError("Settings are not set!");
 
-            if (isCameraSet == false)
-                Debug.LogError("MainCamera are not set!");
+            if (isAreaSet == false)
+                Debug.LogError("SpawnArea are not set!");
 
             Debug.LogError("Aborting...");
             AppUtility.Quit();
@@ -52,11 +52,18 @@ namespace GravitySpheres.Scripts
         private void CreateSpheresPool()
         {
             spheresPool = new GravitySphere[settings.SpheresLimit];
-            float sphereYMovementLimit = mainCamera.orthographicSize;
-            float sphereXMovementLimit = sphereYMovementLimit * mainCamera.aspect;
 
             for (int i = 0; i < spheresPool.Length; i++)
-                spheresPool[i] = settings.SphereBuilder.Create(transform, sphereXMovementLimit, sphereYMovementLimit);
+                spheresPool[i] = settings.SphereBuilder.Create(spawnArea.transform, GetRandomPositionInsideArea());
+        }
+
+        private Vector3 GetRandomPositionInsideArea()
+        {
+            return spawnArea.center + new Vector3(
+                (Random.value - 0.5f) * spawnArea.size.x,
+                (Random.value - 0.5f) * spawnArea.size.y,
+                (Random.value - 0.5f) * spawnArea.size.z
+            );
         }
 
         #endregion constructor & inits
