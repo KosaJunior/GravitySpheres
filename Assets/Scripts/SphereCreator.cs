@@ -11,7 +11,7 @@ namespace GravitySpheres.Scripts
 
         [SerializeField] private GravitySpheresSettings settings;
         [Space]
-        [SerializeField] private BoxCollider spawnArea;
+        [SerializeField] private Camera camera;
 
         private GravitySphere[] spheresPool;
         private int             nextSphereIndex = 0;
@@ -33,15 +33,15 @@ namespace GravitySpheres.Scripts
         private bool ValidateReferences()
         {
             bool areSettingsSet = settings;
-            bool isAreaSet      = spawnArea;
-            if (areSettingsSet && isAreaSet)
+            bool isCameraSet    = camera;
+            if (areSettingsSet && isCameraSet)
                 return true;
 
             if (areSettingsSet == false)
                 Debug.LogError("Settings are not set!");
 
-            if (isAreaSet == false)
-                Debug.LogError("SpawnArea are not set!");
+            if (isCameraSet == false)
+                Debug.LogError("Camera are not set!");
 
             Debug.LogError("Aborting...");
             AppUtility.Quit();
@@ -54,16 +54,17 @@ namespace GravitySpheres.Scripts
             spheresPool = new GravitySphere[settings.SpheresLimit];
 
             for (int i = 0; i < spheresPool.Length; i++)
-                spheresPool[i] = settings.SphereBuilder.Create(spawnArea.transform, GetRandomPositionInsideArea());
+                spheresPool[i] = settings.SphereBuilder.Create(i, transform, GetRandomPositionInsideArea());
         }
 
         private Vector3 GetRandomPositionInsideArea()
         {
-            return spawnArea.center + new Vector3(
-                (Random.value - 0.5f) * spawnArea.size.x,
-                (Random.value - 0.5f) * spawnArea.size.y,
-                (Random.value - 0.5f) * spawnArea.size.z
-            );
+            return camera.ScreenToWorldPoint(
+                new Vector3(
+                    Random.Range(0, Screen.width),
+                    Random.Range(0, Screen.height),
+                    camera.farClipPlane / 2
+                ));
         }
 
         #endregion constructor & inits
@@ -92,7 +93,7 @@ namespace GravitySpheres.Scripts
 
         private void ShowSphere()
         {
-            spheresPool[nextSphereIndex].gameObject.SetActive(true);
+            spheresPool[nextSphereIndex].ShowSphere();
             OnVisibleSpheresCountChange?.Invoke(++nextSphereIndex);
 
             if (AreAllSpheresVisible())
