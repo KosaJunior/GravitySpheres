@@ -7,34 +7,25 @@ namespace GravitySpheres.Scripts
         #region Variables
 
         [Header("[ References ]")]
-        [SerializeField] private GravitySphereMovement movement;
-        // [SerializeField] private GravitySphereCollider collider;
+        [SerializeField] private Rigidbody rigidbody;
+        [SerializeField] private SphereGravityField gravityField;
 
         #endregion variables
 
-        #region Constructor & inits
+        #region Properties
+        public Rigidbody Rigidbody => rigidbody;
+        public SphereGravityField GravityField => gravityField;
 
-        public void Initialize(float areaWidth, float areaHeight)
+        #endregion properties
+
+        #region Public methods
+
+        public void ShowSphere()
         {
-            movement.Initialize(areaWidth, areaHeight);
-            SubscribeToColliderEvents();
+            gravityField.RegisterSphere(this);
+            gameObject.SetActive(true);
         }
 
-        private void SubscribeToColliderEvents()
-        {
-            // edgeDetector.OnCollisionWithScreenEdge += StartMovingBackward;
-        }
-
-        private void OnDestroy()
-        {
-            DisposeColliderEvents();
-        }
-
-        private void DisposeColliderEvents()
-        {
-            // edgeDetector.OnCollisionWithScreenEdge -= StartMovingBackward;
-        }
-
-        #endregion constructor & inits
+        #endregion public methods
     }
 }
