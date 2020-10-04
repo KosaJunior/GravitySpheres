@@ -6,64 +6,35 @@ namespace GravitySpheres.Scripts
     {
         #region Variables
 
-        [SerializeField] private float movingSpeed = 2f;
-
-        private float xPositionLimit;
-        private float yPositionLimit;
-
-        private Vector3 targetDirection;
+        [Header("[ References ]")]
+        [SerializeField] private GravitySphereMovement movement;
+        // [SerializeField] private GravitySphereCollider collider;
 
         #endregion variables
 
         #region Constructor & inits
 
-        public void Initialize(float xPositionLimit, float yPositionLimit)
+        public void Initialize(float areaWidth, float areaHeight)
         {
-            SetPositionLimits(xPositionLimit, yPositionLimit);
-            SetRandomPosition();
-            SetRandomMoveDirection();
+            movement.Initialize(areaWidth, areaHeight);
+            SubscribeToColliderEvents();
         }
 
-        private void SetPositionLimits(float xPositionLimit, float yPositionLimit)
+        private void SubscribeToColliderEvents()
         {
-            this.xPositionLimit = xPositionLimit;
-            this.yPositionLimit = yPositionLimit;
+            // edgeDetector.OnCollisionWithScreenEdge += StartMovingBackward;
         }
 
-        private void SetRandomPosition()
+        private void OnDestroy()
         {
-            transform.position = GetRandomPosition();
+            DisposeColliderEvents();
+        }
+
+        private void DisposeColliderEvents()
+        {
+            // edgeDetector.OnCollisionWithScreenEdge -= StartMovingBackward;
         }
 
         #endregion constructor & inits
-
-        #region Private methods
-
-        private void SetRandomMoveDirection()
-        {
-            var randomPosition = GetRandomPosition();
-            targetDirection = (randomPosition - transform.position).normalized;
-        }
-
-        private Vector3 GetRandomPosition()
-        {
-            return new Vector3(
-                Random.Range(-xPositionLimit, xPositionLimit),
-                Random.Range(-yPositionLimit, yPositionLimit),
-                0f
-            );
-        }
-
-        private void Update()
-        {
-            Move();
-        }
-
-        private void Move()
-        {
-            transform.position += targetDirection * (movingSpeed * Time.deltaTime);
-        }
-
-        #endregion private methods
     }
 }
