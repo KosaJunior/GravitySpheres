@@ -97,7 +97,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movement: {fileID: 3581755731656974112}
-  collider: {fileID: 3448824283810608027}
 --- !u!114 &3581755731656974112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,6 +110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movingSpeed: 2
+  windResistance: 5
   rigidbody: {fileID: 4266324239127480401}
   drawGizmos: 0
 --- !u!114 &3448824283810608027

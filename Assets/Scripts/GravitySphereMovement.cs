@@ -16,6 +16,7 @@ namespace GravitySpheres.Scripts
 
         [Header("[ Settings ]")]
         [SerializeField] private float movingSpeed = 2f;
+        [SerializeField] private float airResistance = 10f;
 
         [Header("[ Components References ]")]
         [SerializeField] private Rigidbody rigidbody;
@@ -41,9 +42,15 @@ namespace GravitySpheres.Scripts
 
             lastSqrMag = Mathf.Infinity;
 
+            SetupRigidbody();
             SetRandomStartPosition();
             SetRandomEndPosition();
             SwitchMovingState(MovingDirection.ToEnd);
+        }
+
+        private void SetupRigidbody()
+        {
+            rigidbody.drag = airResistance;
         }
 
         private void SetRandomStartPosition()
