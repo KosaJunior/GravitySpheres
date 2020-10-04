@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,12 +9,11 @@ namespace GravitySpheres.Scripts
         #region Variables
 
         [Header("[ References ]")]
+        [SerializeField] private GravitySphereSettings settings;
         [SerializeField] private Rigidbody rigidbody;
         [SerializeField] private SphereGravityField gravityField;
 
-        [SerializeField] private List<GravitySphere> spheresInside = new List<GravitySphere>();
-
-        private uint spheresInsideLimit;
+        private List<GravitySphere> spheresInside = new List<GravitySphere>();
 
         private float   defaultMass;
         private Vector3 defaultScale;
@@ -28,9 +28,8 @@ namespace GravitySpheres.Scripts
 
         #region Constructor & inits
 
-        public void Initialize(uint spheresInsideLimit)
+        public void Initialize()
         {
-            this.spheresInsideLimit = spheresInsideLimit;
             CacheStartParameters();
         }
 
@@ -62,6 +61,28 @@ namespace GravitySpheres.Scripts
             if (spheresInside.Contains(sphereInside)) return;
 
             spheresInside.Add(sphereInside);
+            CheckIsTimeToBreakUp();
+        }
+
+        private void CheckIsTimeToBreakUp()
+        {
+            bool isLimitReached = spheresInside.Count >= settings.SpheresToBreakup;
+            if (isLimitReached == false) return;
+
+            ReleaseSpheres();
+        }
+
+        private void ReleaseSpheres()
+        {
+            for (int i = 0; i < spheresInside.Count; i++)
+                StartCoroutine(spheresInside[i].ReleaseSphere());
+        }
+
+        private IEnumerator ReleaseSphere()
+        {
+
+
+            yield return new WaitForSeconds(settings.TimeWithCollisionDisabledAfterBreakup);
         }
 
         #endregion public methods

@@ -95,8 +95,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6c1ff36b96a458dbda3c6b384aa0a26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  settings: {fileID: 11400000, guid: a967593c09b4a6346bb37b9221ba67d4, type: 2}
   rigidbody: {fileID: 4266324239127480401}
   gravityField: {fileID: 1670919228565830375}
+  spheresInside: []
 --- !u!114 &1670919228565830375
 MonoBehaviour:
   m_ObjectHideFlags: 0

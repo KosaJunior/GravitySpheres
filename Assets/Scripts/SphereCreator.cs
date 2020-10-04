@@ -12,7 +12,7 @@ namespace GravitySpheres.Scripts
 
         [SerializeField] private GravitySphereBuilder builder;
         [Space]
-        [SerializeField] private GravitySpheresSettings  settings;
+        [SerializeField] private SpheresCreatorSettings  settings;
         [SerializeField] private SphereCombineController sphereCombineController;
         [Space]
         [SerializeField] private Camera camera;
