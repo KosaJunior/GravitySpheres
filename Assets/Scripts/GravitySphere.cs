@@ -16,7 +16,7 @@ namespace GravitySpheres.Scripts
         private uint spheresInsideLimit;
 
         private float   defaultMass;
-        private Vector3 defaultPosition;
+        private Vector3 defaultScale;
 
         #endregion variables
 
@@ -36,8 +36,8 @@ namespace GravitySpheres.Scripts
 
         private void CacheStartParameters()
         {
-            defaultMass     = rigidbody.mass;
-            defaultPosition = transform.position;
+            defaultMass  = rigidbody.mass;
+            defaultScale = transform.localScale;
         }
 
         #endregion constructor & inits
@@ -71,7 +71,7 @@ namespace GravitySpheres.Scripts
         private void ResetSphere()
         {
             rigidbody.mass     = defaultMass;
-            transform.position = defaultPosition;
+            transform.position = defaultScale;
         }
 
         #endregion private methods
