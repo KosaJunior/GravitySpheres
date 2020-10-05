@@ -8,13 +8,15 @@ namespace GravitySpheres.Scripts
     {
         #region Variables
 
-        public event System.Action<int> OnVisibleSpheresCountChange;
+        public event  System.Action<int> OnVisibleSpheresCountChange;
+        private event System.Action      OnReverseGravityStarted;
 
         [SerializeField] private GravitySphereBuilder builder;
         [Space]
         [SerializeField] private SpheresCreatorSettings  settings;
         [SerializeField] private SphereCombineController sphereCombineController;
         [Space]
+        [SerializeField] private float zOffsetFromCameraFarClip = 250f;
         [SerializeField] private Camera camera;
 
         private GravitySphere[] spheresPool;
@@ -70,6 +72,7 @@ namespace GravitySpheres.Scripts
                 var gravitySphere = builder.Create(i, transform, GetRandomPositionInsideArea());
                 if (gravitySphere == false) return;
 
+                OnReverseGravityStarted += gravitySphere.GravityField.InvertGravity;
                 sphereCombineController.SubscribeToCollisionEvent(gravitySphere);
                 spheresPool[i] = gravitySphere;
             }
@@ -77,11 +80,12 @@ namespace GravitySpheres.Scripts
 
         private Vector3 GetRandomPositionInsideArea()
         {
+            float cameraFarClipPlane = camera.farClipPlane;
             return camera.ScreenToWorldPoint(
                 new Vector3(
                     Random.Range(0, Screen.width),
                     Random.Range(0, Screen.height),
-                    Random.Range(camera.nearClipPlane, camera.farClipPlane)
+                    Random.Range(cameraFarClipPlane - zOffsetFromCameraFarClip, cameraFarClipPlane)
                 ));
         }
 
@@ -119,15 +123,19 @@ namespace GravitySpheres.Scripts
 
             OnVisibleSpheresCountChange?.Invoke(++nextSphereIndex);
 
-            if (AreAllSpheresVisible())
-                DisableDisplaying();
+            if (AreAllSpheresVisible() == false) return;
+
+            StopSpawning();
+            SendInvertGravityEvent();
         }
+
+        private void SendInvertGravityEvent() => OnReverseGravityStarted.Invoke();
 
         private bool IsAnySphereCreated() => spheresPool[0];
 
         private bool AreAllSpheresVisible() => nextSphereIndex == spheresPool.Length;
 
-        private void DisableDisplaying() => enabled = false;
+        private void StopSpawning() => enabled = false;
 
         private void ResetSphereShowDelay() => sphereShowDelay = 0f;
 

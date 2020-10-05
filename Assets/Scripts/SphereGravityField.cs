@@ -15,8 +15,10 @@ namespace GravitySpheres.Scripts
 
         public event System.Action<Collision> OnSphereCollision;
 
-        [SerializeField] private LayerMask sphereGravityFieldMask;
-        [SerializeField] private Rigidbody rigidbody;
+        [SerializeField] private LayerMask      sphereGravityFieldMask;
+        [SerializeField] private Rigidbody      rigidbody;
+
+        private bool isGravityInverted = false;
 
         #endregion variables
 
@@ -38,21 +40,27 @@ namespace GravitySpheres.Scripts
             spheres.Remove(sphere);
         }
 
+        public void InvertGravity() => isGravityInverted =  true;
+
+
         #endregion public methods
 
         #region Private methods
 
         private void OnCollisionEnter(Collision other)
         {
+            if (isGravityInverted)
+                return;
+
             if (IsCollideWithGravityField(other.gameObject.layer))
-                OnCollision(other);
+                PrepareToCombine(other);
         }
 
-        private void OnCollision(Collision collision)
+        private void PrepareToCombine(Collision other)
         {
             rigidbody.detectCollisions = false;
             DisableGravity();
-            OnSphereCollision.Invoke(collision);
+            OnSphereCollision.Invoke(other);
         }
 
         private void DisableGravity() => enabled = false;
@@ -72,8 +80,19 @@ namespace GravitySpheres.Scripts
             for (int i = 0; i < spheres.Count; i++)
             {
                 if (spheres[i].GravityField != this)
-                    Attract(spheres[i]);
+                    if (isGravityInverted)
+                        Repel(spheres[i]);
+                    else
+                        Attract(spheres[i]);
             }
+        }
+
+        private void Repel(GravitySphere sphereToAttract)
+        {
+            var     rigidbodyToRepel = sphereToAttract.Rigidbody;
+            Vector3 direction        = rigidbody.position - rigidbodyToRepel.position;
+            direction.Normalize();
+            rigidbody.AddForce(direction * rigidbody.mass);
         }
 
         private void Attract(GravitySphere sphereToAttract)
